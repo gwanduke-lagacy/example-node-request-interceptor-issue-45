@@ -1,9 +1,19 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import App from './App';
+import React from "react";
+import { render } from "@testing-library/react";
+import { setupServer } from "msw/node";
+import { rest } from "msw";
 
-test('renders learn react link', () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+import App from "./App";
+
+setupServer(
+  rest.get("https://www.example.com", (req, res, ctx) => {
+    return res(ctx.json({}));
+  })
+);
+
+describe("App", () => {
+  test("render", async () => {
+    const { findByText } = render(<App />);
+    await findByText(/loaded/i);
+  });
 });
