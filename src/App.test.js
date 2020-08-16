@@ -5,11 +5,15 @@ import { rest } from "msw";
 
 import App from "./App";
 
-setupServer(
+const server = setupServer(
   rest.get("https://www.example.com", (req, res, ctx) => {
     return res(ctx.json({}));
   })
 );
+
+beforeAll(() => {
+  server.listen();
+});
 
 describe("App", () => {
   test("render", async () => {
